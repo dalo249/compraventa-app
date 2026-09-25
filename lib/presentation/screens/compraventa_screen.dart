@@ -1,6 +1,7 @@
 import 'package:flutter_application_2/presentation/screens/compraventa_detail.dart';
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/router/app_routes.dart';
 import '../../models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
@@ -142,9 +143,10 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
         isFavorite: favoriteId == index,
         onFavoriteTap: () => toggleFavorite(index),
         onTap: () => {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CompraventaDetail(compraventa: compraventa))      
-          )
+          Navigator.of(context).pushNamed(
+            AppRoutes.compraventaDetail,
+            arguments: compraventa
+            )
       });
     },
 
