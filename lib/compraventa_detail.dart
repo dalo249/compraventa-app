@@ -11,7 +11,14 @@ class CompraventaDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( title: Text(compraventa.title)),
+      appBar: AppBar( 
+        title: Text(compraventa.title),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop(context);
+          }, 
+          icon: Icon(Icons.arrow_back)),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Text(compraventa.description),
