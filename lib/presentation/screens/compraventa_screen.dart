@@ -1,16 +1,16 @@
-import 'package:flutter_application_2/compraventa_detail.dart';
-import 'package:flutter_application_2/item_card.dart';
+import 'package:flutter_application_2/presentation/screens/compraventa_detail.dart';
+import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
-import 'compraventa.dart';
+import '../../models/compraventa.dart';
 
-class MovieScreen extends StatefulWidget {
-  const MovieScreen({super.key});
+class CompraventaScreen extends StatefulWidget {
+  const CompraventaScreen({super.key});
 
   @override
-  State<MovieScreen> createState() => _MovieScreenState();
+  State<CompraventaScreen> createState() => _CompraventaScreenState();
 }
 
-class _MovieScreenState extends State<MovieScreen> {
+class _CompraventaScreenState extends State<CompraventaScreen> {
   // Estado de la pantalla.
   // Durante la clase analizaremos qué representa cada variable
   // y cuándo debe cambiar.
@@ -106,7 +106,7 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compras y Ventas'),
+        title: const Text('Compraventa'),
       ),
       body: _buildBody(),
     );
@@ -142,10 +142,9 @@ class _MovieScreenState extends State<MovieScreen> {
         isFavorite: favoriteId == index,
         onFavoriteTap: () => toggleFavorite(index),
         onTap: () => {
-          Navigator.push
-          (context, 
-          MaterialPageRoute(builder: (_) => CompraventaDetail(compraventa: compraventa)),
-        ),
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CompraventaDetail(compraventa: compraventa))      
+          )
       });
     },
 
