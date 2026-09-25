@@ -1,4 +1,4 @@
-import 'package:flutter_application_2/compraventa.dart';
+import 'package:flutter_application_2/models/compraventa.dart';
 import 'package:flutter/material.dart';
 
 
