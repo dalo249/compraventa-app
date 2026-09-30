@@ -1,4 +1,3 @@
-import 'package:flutter_application_2/presentation/screens/compraventa_detail.dart';
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/router/app_routes.dart';
