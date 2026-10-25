@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/models/compraventa.dart';
+import 'package:flutter_application_2/domain/models/compraventa.dart';
 import 'package:flutter_application_2/presentation/screens/compraventa_detail.dart';
 import 'package:flutter_application_2/presentation/screens/compraventa_screen.dart';
 import 'package:flutter_application_2/router/app_routes.dart';

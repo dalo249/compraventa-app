@@ -1,7 +1,7 @@
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/router/app_routes.dart';
-import '../../models/compraventa.dart';
+import '../../domain/models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
   const CompraventaScreen({super.key});
@@ -41,7 +41,7 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
       CompraVenta(
         id: 1,
         title: 'Carro',
-        category: 'Vehiculo',
+        categoryId: 'Vehiculo',
         price: 15,
         tiempoDeUso: 3,
         estatus: 'Disponible',
@@ -52,7 +52,7 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
       CompraVenta(
         id: 2,
         title: 'Motocicleta',
-        category: 'vehiculo',
+        categoryId: 'vehiculo',
         price: 12,
         tiempoDeUso: 2,
         estatus: 'Disponible',
@@ -63,7 +63,7 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
       CompraVenta(
         id: 3,
         title: 'Lavadora',
-        category: 'Electrodoméstico',
+        categoryId: 'Electrodoméstico',
         price: 18,
         tiempoDeUso: 4,
         estatus: 'Disponible',

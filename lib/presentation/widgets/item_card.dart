@@ -1,4 +1,4 @@
-import 'package:flutter_application_2/models/compraventa.dart';
+import 'package:flutter_application_2/domain/models/compraventa.dart';
 import 'package:flutter/material.dart';
 
 
@@ -30,7 +30,7 @@ class ItemCard extends StatelessWidget {
             children:[
               Text(compraventa.title),
               const SizedBox(height: 4.0,),
-              Text(compraventa.category),
+              Text(compraventa.categoryId),
               const SizedBox(height: 4.0,),
               Text(compraventa.description),
             ],
