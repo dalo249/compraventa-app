@@ -30,7 +30,7 @@ class ItemCard extends StatelessWidget {
             children:[
               Text(compraventa.title),
               const SizedBox(height: 4.0,),
-              Text(compraventa.categoryId),
+              Text(compraventa.categoryId.toString()),
               const SizedBox(height: 4.0,),
               Text(compraventa.description),
             ],

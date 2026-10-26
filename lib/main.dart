@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/router/app_router.dart';
 import 'package:flutter_application_2/router/app_routes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_application_2/config/app_config.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
+  debugPrint('API_BASE_URL configurada: ${AppConfig.apiBaseUrl}');
+
+
   runApp(const MyApp());
 }
 
