@@ -1,6 +1,6 @@
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/router/app_routes.dart';
+import 'package:flutter_application_2/core/router/app_routes.dart';
 import '../../domain/models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
