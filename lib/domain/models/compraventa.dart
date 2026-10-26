@@ -22,7 +22,9 @@ class CompraVenta {
   });
 
   factory CompraVenta.fromJson(Map<String, dynamic> json) {
-    final id = json['id'];
+    final rawId = json['id'];
+    final id = rawId is int ? rawId : int.parse(rawId.toString()); //API jsonServer solo genera id texto
+
     final title = json['title'];
     final categoryId = json['category_id'];
     final price = json['price'];
