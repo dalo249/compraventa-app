@@ -34,9 +34,7 @@ class CompraVenta {
     final imagePath = json['image_path'];
     final description = json['description'];
 
-    if (id is! int) {
-      throw const FormatException('id debe ser entero');
-    }
+
     if (title is! String) {
       throw const FormatException('titulo debe ser string');
     }

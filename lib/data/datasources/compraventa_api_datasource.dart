@@ -4,16 +4,16 @@ import 'package:flutter_application_2/core/config/app_config.dart';
 import 'package:flutter_application_2/domain/models/compraventa.dart';
 import 'package:http/http.dart' as http;
 
-class CompraventaService {
+class CompraventaApiService {
 
   final Duration timeout;
   final http.Client _client;
   final String _apiBaseUrl = AppConfig.apiBaseUrl;
 
-  CompraventaService( {
-    required this._client,
+  CompraventaApiService( {
+    required http.Client client,
     this.timeout = const Duration(seconds: 15)
-  });
+  }): this._client = client;
 
 
   Future<List<CompraVenta>> getCompraventas() async {

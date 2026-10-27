@@ -1,10 +1,17 @@
+import 'package:flutter_application_2/domain/repositories/compraventa_repository.dart';
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/router/app_routes.dart';
 import '../../domain/models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
-  const CompraventaScreen({super.key});
+
+  final CompraventaRepository _compraventaRepository;
+
+  const CompraventaScreen({
+    super.key,
+    required this._compraventaRepository,
+    });
 
   @override
   State<CompraventaScreen> createState() => _CompraventaScreenState();
@@ -19,6 +26,8 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
   String errorMessage = '';
   int? favoriteId;
 
+  late Future<List<CompraVenta>> _futureCompraventas;
+
   void toggleFavorite(int compraventaId){
     setState(() {
       favoriteId = favoriteId == compraventaId ? null: compraventaId;
@@ -29,6 +38,9 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
   void initState() {
     super.initState();
     fetchCompraVenta();
+
+    //peticion getCompraventas
+    _futureCompraventas = widget._compraventaRepository.getCompraventas();
   }
 
   // Simula una operación asíncrona, como consultar una API.
@@ -111,8 +123,10 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
       body: _buildBody(),
     );
   }
+  
 
   Widget _buildBody() {
+
     // Empezamos con una interfaz mínima que ya funciona.
     // Este método evolucionará durante los checkpoints.
     if (isLoading) {
