@@ -59,10 +59,8 @@ class ItemCard extends StatelessWidget {
                 height: 90,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3r7i6NeIOiVT8_QIhuRQw1XS2aFUREQGxx-sEZOxxBA&s',
-                    ),
+                  image: DecorationImage(
+                    image: AssetImage(compraventa.imagePath ?? 'assets/images/no_image.png') ,
                     fit: BoxFit.cover,
                   ),
                 ),
