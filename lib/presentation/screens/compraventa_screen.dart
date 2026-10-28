@@ -1,19 +1,15 @@
-import 'dart:io';
 import 'package:flutter_application_2/domain/repositories/compraventa_repository.dart';
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/router/app_routes.dart';
 import 'package:http/http.dart';
+
 import '../../domain/models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
-
   final CompraventaRepository _compraventaRepository;
 
-  const CompraventaScreen({
-    super.key,
-    required this._compraventaRepository,
-    });
+  const CompraventaScreen({super.key, required this._compraventaRepository});
 
   @override
   State<CompraventaScreen> createState() => _CompraventaScreenState();
@@ -36,9 +32,9 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
     });
   }
 
-  void toggleFavorite(int compraventaId){
+  void toggleFavorite(int compraventaId) {
     setState(() {
-      favoriteId = favoriteId == compraventaId ? null: compraventaId;
+      favoriteId = favoriteId == compraventaId ? null : compraventaId;
     });
   }
 
@@ -50,32 +46,23 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
     _futureCompraventas = widget._compraventaRepository.getCompraventas();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Compraventa'),
-      ),
+      appBar: AppBar(title: const Text('Compraventa')),
       body: _buildBody(),
     );
   }
-  
 
   Widget _buildBody() {
-
     return FutureBuilder(
       future: _futureCompraventas,
       builder: (context, snapshot) {
-        
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
-            child: CircularProgressIndicator()
-          );
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
         }
 
-        if(snapshot.hasError){
+        if (snapshot.hasError) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -84,15 +71,20 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
                 children: [
                   const Icon(Icons.error, size: 48),
                   const SizedBox(height: 16),
-              
-                  if (snapshot.error is ClientException) //bug: capturar la excepcion correcta
-                    Text("Error conexion:", style: TextStyle(fontSize: 8, color: Colors.red)),
-                    Text(snapshot.error.toString()),
-                    const SizedBox(height: 12),
-                  
+
+                  if (snapshot.error
+                      is ClientException) //bug: capturar la excepcion correcta
+                    Text(
+                      "Error conexion:",
+                      style: TextStyle(fontSize: 8, color: Colors.red),
+                    ),
+                  Text(snapshot.error.toString()),
+                  const SizedBox(height: 12),
+
                   ElevatedButton(
-                    onPressed: retryGetCompraventas, 
-                    child: const Text('Reintentar'))                  
+                    onPressed: retryGetCompraventas,
+                    child: const Text('Reintentar'),
+                  ),
                 ],
               ),
             ),
@@ -101,31 +93,24 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
 
         final compraventas = snapshot.data ?? [];
 
-        if(compraventas.isEmpty){
-          
-        }
+        if (compraventas.isEmpty) {}
 
         return _ListCompraventas(
-          compraVentas: compraventas, 
+          compraVentas: compraventas,
           favoriteId: favoriteId,
           onFavoriteTap: toggleFavorite,
           onCompraventaTap: (compraventa) {
-            Navigator.of(context).pushNamed(
-              AppRoutes.compraventaDetail,
-              arguments: compraventa
-            );
-          }
+            Navigator.of(context)
+                .pushNamed(AppRoutes.compraventaDetail, arguments: compraventa);
+          },
         );
       },
     );
-
   }
 }
 
-
 //Widget lista compraventas
 class _ListCompraventas extends StatelessWidget {
-
   final List<CompraVenta> compraVentas;
   final int? favoriteId;
   final ValueChanged<int> onFavoriteTap;
@@ -138,26 +123,20 @@ class _ListCompraventas extends StatelessWidget {
     required this.onCompraventaTap,
   });
 
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-
       itemCount: compraVentas.length,
-      itemBuilder:(context,index) {
+      itemBuilder: (context, index) {
+        final compraventa = compraVentas[index];
 
-      final compraventa = compraVentas[index];
-    
-      return ItemCard(
-        compraventa: compraventa, 
-        isFavorite: favoriteId == index,
-        onFavoriteTap: () => {
-          onFavoriteTap(compraventa.id)
-        },
-        onTap: () => onCompraventaTap(compraventa)
+        return ItemCard(
+          compraventa: compraventa,
+          isFavorite: favoriteId == compraventa.id,
+          onFavoriteTap: () => onFavoriteTap(compraventa.id),
+          onTap: () => onCompraventaTap(compraventa),
         );
-    },
-    
+      },
     );
   }
 }
