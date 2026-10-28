@@ -1,13 +1,11 @@
-import 'package:flutter_application_2/models/compraventa.dart';
+import 'package:flutter_application_2/domain/models/compraventa.dart';
 import 'package:flutter/material.dart';
-
 
 class ItemCard extends StatelessWidget {
   final CompraVenta compraventa;
   final VoidCallback onTap;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
-
 
   const ItemCard({
     super.key,
@@ -20,25 +18,57 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: const EdgeInsets.only(bottom: 12.0),
-        child: InkWell(
-          onTap: onTap,
-          child:  Padding(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-              Text(compraventa.title),
-              const SizedBox(height: 4.0,),
-              Text(compraventa.category),
-              const SizedBox(height: 4.0,),
-              Text(compraventa.description),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: onFavoriteTap,
+                icon: Icon(
+                  isFavorite ? Icons.star : Icons.star_border,
+                  color: isFavorite ? Colors.amber : null,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      compraventa.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '\$${compraventa.price}',
+                      style: const TextStyle(
+                        color: Colors.lightGreen,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(compraventa.description),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 100,
+                height: 90,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                    image: AssetImage(compraventa.imagePath ?? 'assets/images/no_image.png') ,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ],
-          ), 
+          ),
         ),
-        ),
-      );
-    
-    }
-
+      ),
+    );
+  }
 }

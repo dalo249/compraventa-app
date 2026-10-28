@@ -1,10 +1,15 @@
+import 'package:flutter_application_2/domain/repositories/compraventa_repository.dart';
 import 'package:flutter_application_2/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/router/app_routes.dart';
-import '../../models/compraventa.dart';
+import 'package:flutter_application_2/core/router/app_routes.dart';
+import 'package:http/http.dart';
+
+import '../../domain/models/compraventa.dart';
 
 class CompraventaScreen extends StatefulWidget {
-  const CompraventaScreen({super.key});
+  final CompraventaRepository _compraventaRepository;
+
+  const CompraventaScreen({super.key, required this._compraventaRepository});
 
   @override
   State<CompraventaScreen> createState() => _CompraventaScreenState();
@@ -19,138 +24,119 @@ class _CompraventaScreenState extends State<CompraventaScreen> {
   String errorMessage = '';
   int? favoriteId;
 
-  void toggleFavorite(int compraventaId){
+  late Future<List<CompraVenta>> _futureCompraventas;
+
+  void retryGetCompraventas() {
     setState(() {
-      favoriteId = favoriteId == compraventaId ? null: compraventaId;
+      _futureCompraventas = widget._compraventaRepository.getCompraventas();
+    });
+  }
+
+  void toggleFavorite(int compraventaId) {
+    setState(() {
+      favoriteId = favoriteId == compraventaId ? null : compraventaId;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    fetchCompraVenta();
-  }
 
-  // Simula una operación asíncrona, como consultar una API.
-  Future<List<CompraVenta>> loadCompraVenta() async {
-    await Future.delayed(
-      const Duration(seconds: 2),
-    );
-
-    return [
-      CompraVenta(
-        id: 1,
-        title: 'Carro',
-        category: 'Vehiculo',
-        price: 15,
-        tiempoDeUso: 3,
-        estatus: 'Disponible',
-        isNew: true,
-        imagePath: 'assets/images/carro.png',
-        description: 'Un carro en buen estado, ideal para la ciudad.',
-      ),
-      CompraVenta(
-        id: 2,
-        title: 'Motocicleta',
-        category: 'vehiculo',
-        price: 12,
-        tiempoDeUso: 2,
-        estatus: 'Disponible',
-        isNew: false,
-        imagePath: 'assets/images/motocicleta.png',
-        description: 'Una motocicleta rápida y eficiente para tus desplazamientos.',
-      ),
-      CompraVenta(
-        id: 3,
-        title: 'Lavadora',
-        category: 'Electrodoméstico',
-        price: 18,
-        tiempoDeUso: 4,
-        estatus: 'Disponible',
-        isNew: true,
-        imagePath: 'assets/images/lavadora.png',
-        description: 'Una lavadora de alta capacidad para tu hogar.',
-      ),
-    ];
-  }
-
-  // Esta función se construirá progresivamente durante la clase.
-  Future<void> fetchCompraVenta() async {
-    // CHECKPOINTS DE LA CLASE:
-    // 1. Activar el estado de carga.
-    // 2. Esperar los datos.
-    // 3. Guardar las películas.
-    // 4. Finalizar la carga.
-    // 5. Manejar un posible error.
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
-    try {
-      final data = await loadCompraVenta();
-      setState(() {
-        compraVentas = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = 'Error al cargar los datos';
-        isLoading = false;
-      });
-    } finally {
-    
-    }
+    //peticion getCompraventas
+    _futureCompraventas = widget._compraventaRepository.getCompraventas();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Compraventa'),
-      ),
+      appBar: AppBar(title: const Text('Compraventa')),
       body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
-    // Empezamos con una interfaz mínima que ya funciona.
-    // Este método evolucionará durante los checkpoints.
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    if (errorMessage.isNotEmpty) {
-      return Center(
-        child: Text(errorMessage),
-      );
-    }
-    if(compraVentas.isEmpty){
-      return Center( 
-        child:ElevatedButton(
-          onPressed: fetchCompraVenta,
-          child: const Text('Cargar compras y ventas')
-      ));
-      
-    }
-    return ListView.builder(itemCount: compraVentas.length,
-     itemBuilder:(context,index) {
-      final compraventa = compraVentas[index];
+    return FutureBuilder(
+      future: _futureCompraventas,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-      return ItemCard(
-        compraventa: compraventa, 
-        isFavorite: favoriteId == index,
-        onFavoriteTap: () => toggleFavorite(index),
-        onTap: () => {
-          Navigator.of(context).pushNamed(
-            AppRoutes.compraventaDetail,
-            arguments: compraventa
-            )
-      });
-    },
+        if (snapshot.hasError) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error, size: 48),
+                  const SizedBox(height: 16),
 
+                  if (snapshot.error
+                      is ClientException) //bug: capturar la excepcion correcta
+                    Text(
+                      "Error conexion:",
+                      style: TextStyle(fontSize: 8, color: Colors.red),
+                    ),
+                  Text(snapshot.error.toString()),
+                  const SizedBox(height: 12),
+
+                  ElevatedButton(
+                    onPressed: retryGetCompraventas,
+                    child: const Text('Reintentar'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final compraventas = snapshot.data ?? [];
+
+        if (compraventas.isEmpty) {}
+
+        return _ListCompraventas(
+          compraVentas: compraventas,
+          favoriteId: favoriteId,
+          onFavoriteTap: toggleFavorite,
+          onCompraventaTap: (compraventa) {
+            Navigator.of(context)
+                .pushNamed(AppRoutes.compraventaDetail, arguments: compraventa);
+          },
+        );
+      },
     );
+  }
+}
 
+//Widget lista compraventas
+class _ListCompraventas extends StatelessWidget {
+  final List<CompraVenta> compraVentas;
+  final int? favoriteId;
+  final ValueChanged<int> onFavoriteTap;
+  final ValueChanged<CompraVenta> onCompraventaTap;
 
+  const new({
+    required this.compraVentas,
+    this.favoriteId,
+    required this.onFavoriteTap,
+    required this.onCompraventaTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: compraVentas.length,
+      itemBuilder: (context, index) {
+        final compraventa = compraVentas[index];
+
+        return ItemCard(
+          compraventa: compraventa,
+          isFavorite: favoriteId == compraventa.id,
+          onFavoriteTap: () => onFavoriteTap(compraventa.id),
+          onTap: () => onCompraventaTap(compraventa),
+        );
+      },
+    );
   }
 }
